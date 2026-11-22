@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bütçe Defterim</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FDEEEE;--dot:#F9DCDB;--paper:#FFFBFB;--ink:#43475E;--soft:#7C8197;--pink:#F7CAC9;--pink2:#FCE8E7;--mint:#D5E0F2;--line:#F0D3D3;--ring:#5B76A8;--on:#43475E;--shadow:rgba(91,118,168,.3);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);background:radial-gradient(var(--dot) 2.5px,transparent 3px) 0 0/22px 22px var(--bg);padding:18px 12px 40px}
+.wrap{max-width:760px;margin:0 auto;perspective:1600px}
+.book{position:relative;background:var(--pink);border-radius:22px;padding:10px 10px 10px 34px;box-shadow:0 14px 0 -4px var(--shadow),0 18px 30px var(--shadow)}
+.book:before{content:"";position:absolute;left:8px;top:18px;bottom:18px;width:16px;background:radial-gradient(circle at 50% 50%,var(--paper) 0 5px,var(--ring) 5.5px 7.5px,transparent 8px) 0 0/16px 36px repeat-y}
+.page{background:var(--paper);border-radius:14px;padding:18px;min-height:560px;transform-origin:left center;background-image:repeating-linear-gradient(transparent 0 33px,var(--line) 33px 34px);background-position:0 8px}
+.page.out{animation:fo .35s ease-in forwards}.page.in{animation:fi .35s ease-out}
+.page.back.out{animation:bo .35s ease-in forwards}.page.back.in{animation:bi .35s ease-out}
+@keyframes fo{to{transform:rotateY(-85deg);opacity:.2}}@keyframes fi{from{transform:rotateY(85deg);opacity:.2}}
+@keyframes bo{to{transform:rotateY(85deg);opacity:.2}}@keyframes bi{from{transform:rotateY(-85deg);opacity:.2}}
+@media (prefers-reduced-motion:reduce){.page.out,.page.in{animation:none}}
+.top{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+h1{font-family:'Pacifico',cursive;font-weight:400;font-size:2rem;margin:0;color:var(--ring);line-height:1.2}
+.sub{margin:2px 0 0;color:var(--soft);font-size:.95rem}
+.inv{background:var(--pink2);border:3px dashed var(--ring);border-radius:18px;padding:10px 12px;width:220px;transform:rotate(2deg);box-shadow:0 4px 0 var(--shadow)}
+.inv b{display:block;font-size:.9rem}.inv .amt{font-size:1.6rem;font-weight:600;color:var(--ring);margin:2px 0 6px}
+.inv .row{display:flex;gap:4px}.inv input{min-width:0;flex:1}.inv details{font-size:.8rem;margin-top:4px}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--paper);border:2px solid var(--pink2);border-radius:12px;padding:8px 10px;width:100%}
+input:focus-visible,button:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:8px 12px;background:var(--pink);color:var(--on);font-weight:600;box-shadow:0 3px 0 var(--ring)}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ring)}
+button.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--pink2);box-shadow:none}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px}.tabs button{padding:6px 10px;font-size:.85rem}
+.themes{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}.sw{width:30px;height:30px;padding:0;border-radius:50%;border:3px solid var(--paper);box-shadow:0 0 0 2px var(--line)}.sw.on{box-shadow:0 0 0 3px var(--ring)}.tn{font-size:.85rem;color:var(--soft);margin-right:4px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 10px}
+.nav h2{margin:0;font-size:1.4rem;text-align:center;flex:1}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.wd{text-align:center;font-weight:600;color:var(--soft);font-size:.85rem}
+.cell{min-height:68px;padding:5px;border-radius:12px;background:var(--paper);color:var(--ink);border:2px solid var(--pink2);box-shadow:none;text-align:left;display:flex;flex-direction:column;justify-content:space-between;font-weight:500}
+.cell:hover{background:var(--pink2)}.cell.today{border-color:var(--ring);background:var(--mint)}
+.cell small{font-size:.68rem;color:var(--ring);font-weight:600;word-break:break-all}
+.blank{visibility:hidden}
+.tot{margin-top:12px;background:var(--mint);border-radius:14px;padding:10px 14px;display:flex;justify-content:space-between;gap:8px;font-weight:600}
+.neg{color:#d62d4f!important}
+.item{display:flex;gap:10px;align-items:center;background:var(--paper);border:2px solid var(--pink2);border-radius:14px;padding:8px;margin:8px 0}
+.item img,.ph{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none;background:var(--pink2);display:grid;place-items:center;font-size:1.5rem}
+.item .n{flex:1;min-width:0;overflow-wrap:anywhere}.item.done .n{text-decoration:line-through;opacity:.55}
+.item .p{font-weight:600;color:var(--ring)}.item button{padding:6px 9px}
+.form{display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-top:14px;background:var(--pink2);padding:12px;border-radius:14px}
+.form .full{grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#prev{width:44px;height:44px;border-radius:10px;object-fit:cover}
+.empty{text-align:center;color:var(--soft);padding:20px 0}
+.mood{display:flex;gap:6px;margin:8px 0}.mood button{padding:4px 9px;font-size:1.3rem;box-shadow:none}
+.bar{height:12px;border-radius:8px;background:var(--paper);overflow:hidden}.bar i{display:block;height:100%;background:var(--ring)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin:12px 0}
+.st{background:var(--paper);border:2px solid var(--pink2);border-radius:14px;padding:8px 10px}.st b{display:block;font-size:1.1rem}.st span{font-size:.8rem;color:var(--soft)}
+.card{background:var(--paper);border:2px solid var(--pink2);border-radius:14px;padding:12px;margin:12px 0}
+.card h3{margin:0 0 8px;font-size:1.05rem}
+.pw{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.pie{width:130px;height:130px;border-radius:50%;flex:none}
+.lg{display:flex;gap:6px;align-items:center;font-size:.85rem}.lg i{width:12px;height:12px;border-radius:4px}
+.r2{display:flex;gap:8px;margin-top:8px}
+.cover{text-align:center;padding:50px 10px}.cover .big{font-size:3.5rem}
+@media (max-width:520px){.inv{width:100%;transform:none}.cell{min-height:56px}.page{padding:12px}}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="book"><div class="page in" id="page"></div></div></div>
+<script>
+const M=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const WD=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+const DF=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+const CATS=[['👗','Giyim','#ff8fb8'],['💄','Kozmetik','#b79cff'],['🍰','Yemek','#ffb86b'],['🏠','Ev','#7fd6a8'],['🎮','Eğlence','#6ec3ff'],['📚','Okul','#ffd95e'],['🎁','Diğer','#c3a58f']];
+const MOODS=['😊','🥰','😐','😢','😡'];
+const TABS=[['cal','📅 Takvim'],['sum','📊 Özet'],['rec','🔁 Tekrarlayan'],['wish','💝 İstekler'],['year','🗓 Yıl'],['data','💾 Yedek']];
+const PAL=[
+{id:'rose',code:'13-1520',name:'Rose Quartz',v:{bg:'#FDEEEE',dot:'#F9DCDB',paper:'#FFFBFB',ink:'#43475E',soft:'#7C8197',pink:'#F7CAC9',pink2:'#FCE8E7',mint:'#D5E0F2',line:'#F0D3D3',ring:'#5B76A8',on:'#43475E',shadow:'rgba(91,118,168,.3)'}},
+{id:'peach',code:'13-1023',name:'Peach Fuzz',v:{bg:'#FFF1E8',dot:'#FFE0CC',paper:'#FFFBF8',ink:'#5A3B2E',soft:'#9C7766',pink:'#FFBE98',pink2:'#FFE4D4',mint:'#E8D5C4',line:'#F5D8C6',ring:'#C4622D',on:'#4A2A1C',shadow:'rgba(196,98,45,.3)'}},
+{id:'peri',code:'17-3938',name:'Very Peri',v:{bg:'#EEEEF8',dot:'#DEDEF1',paper:'#FBFBFE',ink:'#34345A',soft:'#7677A3',pink:'#6667AB',pink2:'#E1E1F2',mint:'#CFE8DF',line:'#D7D7EC',ring:'#4A4B8C',on:'#FFFFFF',shadow:'rgba(74,75,140,.3)'}},
+{id:'magenta',code:'18-1750',name:'Viva Magenta',v:{bg:'#FBE6EA',dot:'#F5D0D8',paper:'#FFFAFB',ink:'#4F1A28',soft:'#94606B',pink:'#BB2649',pink2:'#F6D3DB',mint:'#FBE4D0',line:'#F0C9D2',ring:'#8F1636',on:'#FFFFFF',shadow:'rgba(143,22,54,.3)'}},
+{id:'coral',code:'16-1546',name:'Living Coral',v:{bg:'#FFE9E5',dot:'#FFD3CC',paper:'#FFFAF9',ink:'#5A2D2A',soft:'#A0706B',pink:'#FF6F61',pink2:'#FFD9D3',mint:'#C9EFE6',line:'#F8CFC9',ring:'#D14A3D',on:'#3F1A17',shadow:'rgba(209,74,61,.3)'}},
+{id:'mocha',code:'17-1230',name:'Mocha Mousse',v:{bg:'#F0EEE9',dot:'#E4DFD8',paper:'#FCFBF9',ink:'#3E2E27',soft:'#85726A',pink:'#A47864',pink2:'#EFE3DC',mint:'#E6EBE3',line:'#E3D8D0',ring:'#7E5646',on:'#FFFFFF',shadow:'rgba(126,86,70,.3)'}}];
+const DEF=()=>({inv:0,goal:0,log:[],lim:{},inc:{},days:{},wish:[],rec:[],theme:'rose',name:'Bütçe Defterim'});
+let S=DEF();
+try{const r=localStorage.getItem('butceDefteri');if(r)S=Object.assign(DEF(),JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem('butceDefteri',JSON.stringify(S))}catch(e){alert('Kayıt alanı doldu, bazı fotoğrafları silmeyi dene 🥺')}};
+const $=s=>document.querySelector(s);
+const fmt=n=>'₺'+(+n||0).toLocaleString('tr-TR',{maximumFractionDigits:2});
+const pad=n=>String(n).padStart(2,'0');
+const key=(y,m,d)=>y+'-'+pad(m+1)+'-'+pad(d);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sum=(a,f='price')=>(a||[]).reduce((t,i)=>t+(+i[f]||0),0);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const num=id=>parseFloat(($(id).value||'').replace(',','.'));
+const dim=(y,m)=>new Date(y,m+1,0).getDate();
+const DY=k=>{let d=S.days[k];if(Array.isArray(d))d=S.days[k]={items:d};return d||null};
+const mk=k=>DY(k)||(S.days[k]={items:[]});
+const now=new Date();
+let V={y:now.getFullYear(),m:now.getMonth(),d:null,v:'cover'},img='';
+
+function its(y,m,d){const x=DY(key(y,m,d)),n=dim(y,m);return (x?x.items:[]).concat(S.rec.filter(r=>Math.min(r.day,n)==d).map(r=>({...r,id:'r'+r.id,done:true,rec:true})))}
+function stat(y,m){let p=0,s=0,c={};for(let d=1;d<=dim(y,m);d++)its(y,m,d).forEach(i=>{const v=+i.price||0,k=i.cat??6;p+=v;if(i.done)s+=v;c[k]=(c[k]||0)+v});const ym=y+'-'+pad(m+1);return{p,s,c,inc:sum(S.inc[ym],'amt'),lim:S.lim[ym]||0}}
+function theme(){const p=PAL.find(x=>x.id==S.theme)||PAL[0];for(const k in p.v)document.documentElement.style.setProperty('--'+k,p.v[k]);return p}
+function setTheme(id){S.theme=id;save();theme();render()}
+function flip(dir,fn){const p=$('#page'),b=dir<0?' back':'';p.className='page out'+b;setTimeout(()=>{fn();p.className='page in'+b},350)}
+const tabs=()=>`<div class="tabs">${TABS.map(([v,l])=>`<button class="${V.v==v?'':'ghost'}" onclick="to('${v}')">${l}</button>`).join('')}</div>`;
+const head=()=>`<h1 style="font-size:1.6rem">${esc(S.name)}</h1>${tabs()}`;
+const mnav=()=>`<div class="nav"><button onclick="go(-1)" aria-label="Önceki ay">‹</button><h2>${M[V.m]} ${V.y}</h2><button onclick="go(1)" aria-label="Sonraki ay">›</button></div>`;
+const R={cover:vCover,cal:vCal,sum:vSum,rec:vRec,wish:vWish,year:vYear,data:vData,day:vDay};
+const render=()=>R[V.v]();
+const to=v=>flip(1,()=>{V.v=v;img='';render()});
+const go=n=>flip(n,()=>{V.m+=n;if(V.m<0){V.m=11;V.y--}if(V.m>11){V.m=0;V.y++}render()});
+const openDay=d=>flip(1,()=>{V.d=d;V.v='day';img='';render()});
+const back=()=>flip(-1,()=>{V.v='cal';render()});
+function step(n){flip(n,()=>{const t=new Date(V.y,V.m,V.d+n);V.y=t.getFullYear();V.m=t.getMonth();V.d=t.getDate();render()})}
+
+function vCover(){$('#page').innerHTML=`<div class="cover"><div class="big">🌸📒🌸</div><h1 style="font-size:2.6rem">${esc(S.name)}</h1><p class="sub">Küçük alışverişler, büyük hayaller ✿</p>
+<input value="${esc(S.name)}" aria-label="Defter adı" style="max-width:260px;margin:18px auto;display:block;text-align:center" onchange="S.name=this.value.trim()||'Bütçe Defterim';save()">
+<button onclick="to('cal')" style="font-size:1.2rem;padding:12px 26px">Defteri aç ✿</button></div>`}
+
+function vCal(){
+  const{y,m}=V,off=(new Date(y,m,1).getDay()+6)%7,st=stat(y,m),cur=PAL.find(x=>x.id==S.theme)||PAL[0],g=+S.goal||0,pc=g?Math.min(100,S.inv/g*100):0;
+  let c=WD.map(w=>`<div class="wd">${w}</div>`).join('')+'<div class="blank"></div>'.repeat(off);
+  for(let d=1;d<=dim(y,m);d++){const a=its(y,m,d),x=DY(key(y,m,d)),td=d==now.getDate()&&m==now.getMonth()&&y==now.getFullYear();
+    c+=`<button class="cell${td?' today':''}" onclick="openDay(${d})"><span>${d}${x&&x.mood?x.mood:''}</span>${a.length?`<small>🎀${a.length}<br>${fmt(sum(a))}</small>`:''}</button>`}
+  $('#page').innerHTML=`<div class="top"><div><h1>${esc(S.name)}</h1><p class="sub">Küçük alışverişler, büyük hayaller ✿</p></div>
+  <div class="inv"><b>🐷 Yatırım bütçem</b><div class="amt">${fmt(S.inv)}</div>${g?`<div class="bar"><i style="width:${pc}%"></i></div><small>Hedef ${fmt(g)}, %${Math.round(pc)} tamam</small>`:'<small>Hedef belirle 🎯</small>'}
+  <div class="row" style="margin-top:6px"><input id="iv" inputmode="decimal" placeholder="Tutar" aria-label="Tutar"><button onclick="inv(1)">Ekle</button></div>
+  <div class="row" style="margin-top:4px"><button class="ghost" style="flex:1" onclick="inv(0)">Ayarla</button><button class="ghost" style="flex:1" onclick="inv(2)">Hedef</button></div>
+  ${S.log.length?`<details><summary>Geçmiş</summary>${S.log.slice(-6).reverse().map(l=>`${l.d}: ${l.v>0?'+':''}${fmt(l.v)}<br>`).join('')}</details>`:''}</div></div>
+  ${tabs()}
+  <div class="themes"><span class="tn">🎨 ${cur.name} ${cur.code}</span>${PAL.map(p=>`<button class="sw${p.id==cur.id?' on':''}" style="background:linear-gradient(135deg,${p.v.pink} 50%,${p.v.ring} 50%)" onclick="setTheme('${p.id}')" title="${p.name} ${p.code}" aria-label="${p.name}"></button>`).join('')}</div>
+  ${mnav()}<div class="grid">${c}</div>
+  <div class="tot"><span>🌸 ${M[m]} toplam bütçe</span><span>${fmt(st.p)}</span></div>
+  ${st.lim?`<div class="tot"><span>Limit ${fmt(st.lim)}</span><span class="${st.lim-st.p<0?'neg':''}">Kalan ${fmt(st.lim-st.p)}</span></div>`:''}
+  <div style="text-align:center;margin-top:12px"><button class="ghost" onclick="flip(-1,()=>{V.y=now.getFullYear();V.m=now.getMonth();render()})">Bugüne dön</button></div>`}
+
+function inv(md){const v=num('#iv');if(isNaN(v))return $('#iv').focus();
+  if(md==2)S.goal=v;else{const old=+S.inv||0;S.inv=md?old+v:v;S.log.push({d:new Date().toLocaleDateString('tr-TR'),v:S.inv-old})}save();vCal()}
+
+const list=(a,md)=>a.length?a.map(i=>`<div class="item${i.done?' done':''}">${i.img?`<img src="${i.img}" alt="">`:`<div class="ph">${CATS[i.cat??6][0]}</div>`}<div class="n">${i.rec?'🔁 ':''}${esc(i.name)}${i.url?` <a href="${esc(i.url)}" target="_blank" rel="noopener noreferrer">🔗</a>`:''}<div class="p">${fmt(i.price)}</div></div>${
+  md=='w'?`<button onclick="mvW('${i.id}')" title="Güne taşı">📅</button><button class="ghost" onclick="rmW('${i.id}')" title="Sil">🗑</button>`:i.rec?'':`<button class="ghost" onclick="tg('${i.id}')" title="Aldım">${i.done?'✔':'○'}</button><button class="ghost" onclick="rm('${i.id}')" title="Sil">🗑</button>`}</div>`).join(''):'<div class="empty">Henüz bir şey yok. Aşağıdan ekle 🛍️</div>';
+const catSel=()=>`<select id="ct" aria-label="Kategori">${CATS.map((c,i)=>`<option value="${i}">${c[0]} ${c[1]}</option>`).join('')}</select>`;
+const form=(fn,lb)=>`<div class="form"><input id="nm" placeholder="Ne alacaksın?" aria-label="Ürün adı"><input id="pr" inputmode="decimal" placeholder="Fiyat ₺" aria-label="Fiyat"><input id="ur" placeholder="Ürün linki (isteğe bağlı)" aria-label="Link">${catSel()}
+<div class="full"><label><input type="file" accept="image/*" hidden onchange="pick(event)"><span class="ghost" style="padding:8px 12px;border-radius:12px;border:2px solid var(--ring);cursor:pointer;display:inline-block">📷 Fotoğraf</span></label><img id="prev" hidden alt=""><button onclick="${fn}" style="margin-left:auto">${lb}</button></div></div>`;
+function rf(){const n=$('#nm').value.trim(),p=num('#pr');if(!n)return $('#nm').focus();if(isNaN(p))return $('#pr').focus();let u=$('#ur').value.trim();if(u&&!/^https?:\/\//i.test(u))u='https://'+u;const o={id:uid(),name:n,price:p,img,cat:+$('#ct').value,url:u,done:false};img='';return o}
+function pick(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,260/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);img=c.toDataURL('image/jpeg',.7);const p=$('#prev');p.src=img;p.hidden=false};i.src=r.result};r.readAsDataURL(f)}
+
+function vDay(){
+  const{y,m,d}=V,a=its(y,m,d),x=DY(key(y,m,d))||{};
+  $('#page').innerHTML=`<div class="nav" style="margin-top:0"><button class="ghost" onclick="back()">‹ Ay sayfası</button><div style="display:flex;gap:6px"><button onclick="step(-1)" aria-label="Önceki gün">‹</button><button onclick="step(1)" aria-label="Sonraki gün">›</button></div></div>
+  <h1 style="font-size:1.6rem">${d} ${M[m]} ${y}</h1><p class="sub">${DF[new Date(y,m,d).getDay()]}, bu ay alacaklarım</p>
+  <div class="mood">${MOODS.map(e=>`<button class="${x.mood==e?'':'ghost'}" onclick="mood('${e}')" aria-label="Ruh hali ${e}">${e}</button>`).join('')}</div>
+  ${list(a,'d')}${form('add()','Listeye ekle')}
+  <div class="tot"><span>💖 Toplam bütçe</span><span>${fmt(sum(a))}</span></div>
+  <div class="tot" style="background:var(--pink2)"><span>🛍️ Aldıklarım</span><span>${fmt(sum(a.filter(i=>i.done)))}</span></div>
+  <textarea rows="3" placeholder="Günün notu…" aria-label="Günün notu" style="margin-top:12px" onchange="note(this.value)">${esc(x.note||'')}</textarea>`}
+const dk=()=>key(V.y,V.m,V.d);
+function add(){const o=rf();if(!o)return;mk(dk()).items.push(o);save();vDay()}
+function tg(id){const i=mk(dk()).items.find(i=>i.id==id);if(i){i.done=!i.done;save();vDay()}}
+function rm(id){const x=mk(dk());x.items=x.items.filter(i=>i.id!=id);save();vDay()}
+function mood(e){const x=mk(dk());x.mood=x.mood==e?'':e;save();vDay()}
+function note(t){mk(dk()).note=t;save()}
+
+function vSum(){
+  const{y,m}=V,st=stat(y,m),ym=y+'-'+pad(m+1),inc=S.inc[ym]||[],tc=Object.values(st.c).reduce((a,b)=>a+b,0);let acc=0;
+  const pie=tc?CATS.map((c,i)=>{const v=st.c[i]||0,a=acc;acc+=v;return v?`${c[2]} ${a/tc*100}% ${acc/tc*100}%`:''}).filter(Boolean).join(','):'';
+  const S1=(l,v,bad)=>`<div class="st"><span>${l}</span><b class="${bad?'neg':''}">${fmt(v)}</b></div>`;
+  $('#page').innerHTML=`${head()}${mnav()}
+  <div class="stats">${S1('Gelir',st.inc)}${S1('Gider (planlanan)',st.p)}${S1('Aldıklarım',st.s)}${S1('Gelirden kalan',st.inc-st.p,st.inc-st.p<0)}${st.lim?S1('Limitten kalan',st.lim-st.p,st.lim-st.p<0):''}</div>
+  <div class="card"><h3>🎯 ${M[m]} limiti</h3><div class="r2"><input id="lm" inputmode="decimal" value="${st.lim||''}" placeholder="Aylık limit ₺" aria-label="Aylık limit"><button onclick="setLim()">Kaydet</button></div></div>
+  <div class="card"><h3>💰 Gelirler</h3>${inc.map(i=>`<div class="item"><div class="n">${esc(i.name)}<div class="p">${fmt(i.amt)}</div></div><button class="ghost" onclick="delI('${i.id}')" title="Sil">🗑</button></div>`).join('')||'<div class="empty">Maaş veya ek gelir ekle</div>'}
+  <div class="r2"><input id="in" placeholder="Gelir adı" aria-label="Gelir adı"><input id="ia" inputmode="decimal" placeholder="₺" aria-label="Tutar" style="max-width:110px"><button onclick="addI()">Ekle</button></div></div>
+  <div class="card"><h3>🍰 Kategoriler</h3>${tc?`<div class="pw"><div class="pie" style="background:conic-gradient(${pie})"></div><div>${CATS.map((c,i)=>st.c[i]?`<div class="lg"><i style="background:${c[2]}"></i>${c[0]} ${c[1]}: ${fmt(st.c[i])}</div>`:'').join('')}</div></div>`:'<div class="empty">Bu ay için henüz harcama yok</div>'}</div>`}
+function setLim(){const v=num('#lm'),ym=V.y+'-'+pad(V.m+1);if(isNaN(v))delete S.lim[ym];else S.lim[ym]=v;save();vSum()}
+function addI(){const n=$('#in').value.trim(),a=num('#ia');if(!n)return $('#in').focus();if(isNaN(a))return $('#ia').focus();const ym=V.y+'-'+pad(V.m+1);(S.inc[ym]=S.inc[ym]||[]).push({id:uid(),name:n,amt:a});save();vSum()}
+function delI(id){const ym=V.y+'-'+pad(V.m+1);S.inc[ym]=(S.inc[ym]||[]).filter(i=>i.id!=id);save();vSum()}
+
+function vRec(){
+  $('#page').innerHTML=`${head()}<p class="sub" style="margin-top:10px">Fatura ve abonelikler her ay otomatik takvime gelir.</p>
+  ${S.rec.map(r=>`<div class="item"><div class="ph">${CATS[r.cat??6][0]}</div><div class="n">${esc(r.name)}<div class="p">${fmt(r.price)}, her ayın ${r.day}. günü</div></div><button class="ghost" onclick="rmR('${r.id}')" title="Sil">🗑</button></div>`).join('')||'<div class="empty">Henüz tekrarlayan gider yok</div>'}
+  <div class="form"><input id="nm" placeholder="Gider adı (örn. Netflix)" aria-label="Gider adı"><input id="pr" inputmode="decimal" placeholder="Fiyat ₺" aria-label="Fiyat"><input id="dy" type="number" min="1" max="31" placeholder="Ayın günü (1-31)" aria-label="Ayın günü">${catSel()}<div class="full"><button onclick="addR()" style="margin-left:auto">Her ay ekle</button></div></div>`}
+function addR(){const n=$('#nm').value.trim(),p=num('#pr'),d=Math.min(31,Math.max(1,parseInt($('#dy').value)||0));if(!n)return $('#nm').focus();if(isNaN(p))return $('#pr').focus();if(!$('#dy').value)return $('#dy').focus();S.rec.push({id:uid(),name:n,price:p,day:d,cat:+$('#ct').value});save();vRec()}
+function rmR(id){S.rec=S.rec.filter(r=>r.id!=id);save();vRec()}
+
+function vWish(){
+  const t=key(now.getFullYear(),now.getMonth(),now.getDate());
+  $('#page').innerHTML=`${head()}<p class="sub" style="margin-top:10px">Tarihsiz “bir gün alacağım” listesi. Hazır olunca bir güne taşı.</p>
+  <div class="r2" style="align-items:center"><span class="sub">Taşınacak tarih:</span><input id="mv" type="date" value="${t}" style="max-width:170px"></div>
+  ${list(S.wish,'w')}${form('addW()','İstek ekle')}
+  <div class="tot"><span>💝 İstek listesi toplamı</span><span>${fmt(sum(S.wish))}</span></div>`}
+function addW(){const o=rf();if(!o)return;S.wish.push(o);save();vWish()}
+function rmW(id){S.wish=S.wish.filter(i=>i.id!=id);save();vWish()}
+function mvW(id){const dt=$('#mv').value,i=S.wish.find(i=>i.id==id);if(!dt||!i)return $('#mv').focus();mk(dt).items.push(i);S.wish=S.wish.filter(x=>x.id!=id);save();vWish()}
+
+function vYear(){
+  const st=M.map((_,m)=>stat(V.y,m)),mx=Math.max(1,...st.map(s=>s.p)),P=sum(st,'p'),I=sum(st,'inc');
+  $('#page').innerHTML=`${head()}<div class="nav"><button onclick="gy(-1)" aria-label="Önceki yıl">‹</button><h2>${V.y}</h2><button onclick="gy(1)" aria-label="Sonraki yıl">›</button></div>
+  ${st.map((s,m)=>`<button class="ghost" style="width:100%;text-align:left;margin:5px 0" onclick="flip(1,()=>{V.m=${m};V.v='cal';render()})"><div style="display:flex;justify-content:space-between"><span>${M[m]}</span><span>${fmt(s.p)}${s.inc?`, gelir ${fmt(s.inc)}`:''}</span></div><div class="bar" style="margin-top:4px;background:var(--pink2)"><i style="width:${s.p/mx*100}%"></i></div></button>`).join('')}
+  <div class="tot"><span>🌸 Yıllık gider</span><span>${fmt(P)}</span></div><div class="tot" style="background:var(--pink2)"><span>💰 Yıllık gelir</span><span>${fmt(I)}</span></div>`}
+const gy=n=>flip(n,()=>{V.y+=n;render()});
+
+function vData(){
+  $('#page').innerHTML=`${head()}<div class="card"><h3>💾 Yedekle ve taşı</h3><p class="sub">Veriler bu tarayıcıda durur. Başka cihaza taşımak için kopyala, orada kutuya yapıştırıp içe aktar. İçe aktarma mevcut verilerin yerine geçer.</p>
+  <textarea id="bk" rows="7" aria-label="Yedek verisi" spellcheck="false">${esc(JSON.stringify(S))}</textarea>
+  <div class="r2"><button onclick="cp()">Kopyala</button><button class="ghost" onclick="imp()">İçe aktar</button></div><p class="sub" id="ms"></p></div>`}
+function cp(){const t=$('#bk');t.select();const f=()=>{try{document.execCommand('copy')}catch(e){}};try{navigator.clipboard.writeText(t.value).catch(f)}catch(e){f()}$('#ms').textContent='Kopyalandı ✿ (olmazsa metni seçip kopyala)'}
+function imp(){try{const p=JSON.parse($('#bk').value);if(!p||typeof p!='object'||!p.days)throw 0;S=Object.assign(DEF(),p);save();theme();vData();$('#ms').textContent='İçe aktarıldı ✿'}catch(e){$('#ms').textContent='Bu metin geçerli bir yedek değil 🥺'}}
+
+theme();render();
+</script>
+</body>
+</html>
