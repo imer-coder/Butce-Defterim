@@ -4,7 +4,7 @@ Ajanda gibi sayfaları çevrilen, tek bir HTML dosyasından oluşan kawaii bir b
 
 ## 🌐 Canlı demo
 
-- **Demo:** (https://imer-coder.github.io/Butce-Defterim/)
+- **Demo:** [(https://imer-coder.github.io/Butce-Defterim/)](https://imer-coder.github.io/Butce-Defterim/)
 
 Demoyu denerken eklediğin veriler yalnızca kendi tarayıcında saklanır, başka kimse göremez.
 
